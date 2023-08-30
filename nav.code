@@ -1,0 +1,58 @@
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        font-family: "Montserrat";
+        color: #fff;
+    }
+    body{
+        background: #181818;
+    }
+    nav{
+        background: #222;
+        width: calc(100% - 40px);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999999;
+    }
+    nav .left .logo{
+        display: flex;
+        align-items: center;
+    }
+    nav .left .logo img{
+        height: 45px;
+    }
+
+    nav .left .logo p{
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    nav .right a{
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    nav .right a img{
+        filter: invert(0.8);
+    }
+</style>
+
+<nav>
+    <div class="left">
+        <div class="logo">
+	<a href="http://apps.hostingspell.net">
+            <img src="/internship/img/hostingspell-white.png">
+</a>
+        </div>
+    </div>
+    <div class="right">
+        <a href="https://www.hostingspell.com"><p>HostingSpell Main site</p><img src="/internship/img/link.png"></a>
+    </div>
+</nav>

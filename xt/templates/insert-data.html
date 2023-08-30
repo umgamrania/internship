@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='nav.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <link rel="shortcut icon" href="{{url_for('static', filename = 'icon.png')}}" type="image/png">
+    <style>
+        :root{
+            --collapse-url: url({{ url_for('static', filename='collapse.png') }});
+            --expand-url: url({{ url_for('static', filename='expand.png') }});
+        }
+    </style>
+</head>
+<body>
+    {% include 'nav-bar.html' %}
+    <div class="top-data">
+        <h1>Insert Data</h1>
+    </div>
+    <div class="container">
+        Month: <p class="display-date" id="date-field"></p><br>
+        Username: <input type="text" value="{{current_user.username}}" id="username-input" disabled readonly><br>
+        Income: <input type="number" id="income-input" required>
+        <hr>
+    </div>
+    <div class="btns">
+        <button class="add-cat" onclick="new_category()">Add Category</button>
+        <button class="submit" onclick="submit_data()">Submit</button>
+    </div>
+
+    <script>
+        let delete_img_path = "{{ url_for('static', filename='delete.png') }}";
+    </script>
+    
+    {% include 'footer.html' %}
+</body>
+</html>

@@ -1,0 +1,21 @@
+--2023-08-30 13:10:12--  https://drive.google.com/u/0/uc?id=1RKr0d7maOCnNq68Lk-ikLhLTAy8C13sI
+Resolving drive.google.com (drive.google.com)... 142.251.116.101, 142.251.116.113, 142.251.116.138, ...
+Connecting to drive.google.com (drive.google.com)|142.251.116.101|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://drive.google.com/uc?id=1RKr0d7maOCnNq68Lk-ikLhLTAy8C13sI [following]
+--2023-08-30 13:10:12--  https://drive.google.com/uc?id=1RKr0d7maOCnNq68Lk-ikLhLTAy8C13sI
+Reusing existing connection to drive.google.com:443.
+HTTP request sent, awaiting response... 303 See Other
+Location: https://doc-0g-ak-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/hp14p4spivurcsd3874an97rmv5fbrit/1693393800000/12908486129127455728/*/1RKr0d7maOCnNq68Lk-ikLhLTAy8C13sI?uuid=4b7f6993-16c4-4020-a20a-8933e2bb916a [following]
+Warning: wildcards not supported in HTTP.
+--2023-08-30 13:10:13--  https://doc-0g-ak-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/hp14p4spivurcsd3874an97rmv5fbrit/1693393800000/12908486129127455728/*/1RKr0d7maOCnNq68Lk-ikLhLTAy8C13sI?uuid=4b7f6993-16c4-4020-a20a-8933e2bb916a
+Resolving doc-0g-ak-docs.googleusercontent.com (doc-0g-ak-docs.googleusercontent.com)... 142.251.116.132, 2607:f8b0:4023:1009::84
+Connecting to doc-0g-ak-docs.googleusercontent.com (doc-0g-ak-docs.googleusercontent.com)|142.251.116.132|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 29025 (28K) [application/x-zip-compressed]
+Saving to: ‘uc?id=1RKr0d7maOCnNq68Lk-ikLhLTAy8C13sI’
+
+            uc?id=1RKr0d   0%[                                   ]       0  --.-KB/s               uc?id=1RKr0d7maOCnNq68Lk 100%[==================================>]  28.34K  --.-KB/s    in 0.01s   
+
+2023-08-30 13:10:13 (2.18 MB/s) - ‘uc?id=1RKr0d7maOCnNq68Lk-ikLhLTAy8C13sI’ saved [29025/29025]
+

@@ -1,0 +1,124 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "Montserrat";
+}
+
+body{
+    background: #111;
+}
+
+.logo{
+    height: 40px;
+}
+
+
+form a{
+	color: #fff;
+}
+
+#Forget_text{
+	margin-top: 20px;
+}
+
+.main-container{
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 50%;
+    margin-top: 35px;
+    transform: translateX(-50%);
+}
+
+.main-container .logo-container{
+    display: flex;
+    align-items: center;
+    transform: translateX(-10px);
+    gap: 10px;
+}
+
+.main-container .logo-container h1{
+    font-size: 20px;
+    background: linear-gradient(45deg, #5eb3c3, #4760ab);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+#register_head_text{
+    font-size: 28px;
+}
+.heading{
+    color: #56588e;
+    margin-top: 30px;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    width: 80%;
+    padding: 20px;
+    background: #222;
+    color: #ccc;
+    border-radius: 15px;
+    outline: 1px solid #444;
+}
+
+.form *{
+    width: 100%;
+}
+
+.form input{
+    border: 0;
+    outline: 1px solid #555;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px;
+    color: #ccc;
+    width: calc(100% - 20px);
+    border-radius: 5px;
+    background: #484848;
+}
+
+.form input[type="button"],
+.form input[type="submit"]{
+    width: 100%;
+    margin-top: 30px;
+    background: #8B89E5;
+    color: #fff;
+    outline: none;
+    border: 2px solid #7979b4;
+}
+
+.form input[type="submit"]:hover{
+    cursor: pointer;
+    background: rgb(132, 129, 214);
+}
+
+#Register_text{
+    text-align: center;
+    margin-top: 10px;
+}
+
+.form .field-label{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 70%;
+}
+
+.label-pw{
+    margin-top: 20px !important;
+}
+
+@media(max-width: 1024px){
+    .main-container{
+        width: 90vw;
+    }
+    .form{
+        outline: none;
+    }
+}

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="{{ url_for('static', filename='donut.js') }}" defer></script>
+    <link rel="stylesheet" href="{{url_for('static', filename = 'dashboard.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'nav.css')}}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="shortcut icon" href="{{url_for('static', filename = 'icon.png')}}" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% include 'nav-bar.html' %}
+    <div class="container">
+        <div class="top-data">
+            <h1 id="title"></h1>
+            <div class="download-report">
+                <select id="year-select"></select>
+                <a onclick="download_selected_report()">Download Report</a>
+            </div>
+            <!-- <a onclick="download_overall_report()">Download Overall report</a> -->
+        </div>
+    <div class="top-cards-container">
+        <div class="card profit">
+            <div class="left"><p>Profits</p><h1></h1></div>
+        </div>
+
+            <div class="card expenses">
+                <div class="left"><p>Total expenses</p><h1></h1></div>
+            </div>
+
+            <div class="card income">
+                <div class="left"><p>Total Income</p><h1></h1></div>
+            </div>
+        </div>
+
+        <div class="list-container">
+            <div class="left">
+                <p>Profit Ratio</p>
+                <div class="graph-list-container">
+                    <div class="graph">
+                        <h1 id="percent_display"></h1>
+                        <div class="donut-bg" id="donut-bg"></div>
+                    </div>
+                    <div class="list"></div>
+                </div>
+            </div>
+            <div class="right">
+                <p>Available Records</p>
+                <div class="records-list"></div>
+            </div>
+        </div>
+
+        <div class="world-view"></div>
+    </div>
+
+    {% include 'footer.html' %}
+
+    <script>
+        function formatDate(input) {
+            console.log(input);
+            const monthAbbreviations = {
+                JAN: 'January',
+                FEB: 'February',
+                MAR: 'March',
+                APR: 'April',
+                MAY: 'May',
+                JUN: 'June',
+                JUL: 'July',
+                AUG: 'August',
+                SEP: 'September',
+                OCT: 'October',
+                NOV: 'November',
+                DEC: 'December'
+            };
+
+            const parts = input.split('_');
+            const monthAbbreviation = parts[0];
+            const year = parts[1];
+
+            const fullMonth = monthAbbreviations[monthAbbreviation];
+
+            if (fullMonth) {
+                return `${fullMonth}, 20${year}`;
+            } else {
+                return 'Invalid input';
+            }
+        }
+        let overall_data = {}
+
+        function getOption(val, text){
+            let opt = document.createElement("option");
+            opt.value = val;
+            opt.innerText = text;
+            return opt;
+        }
+
+        let year_select = document.querySelector("#year-select");
+        year_select.appendChild(getOption("overall", "All Years"));
+        fetch("/get-years").then(res => {
+            return res.json()
+        }).then(data => {
+            data.forEach(year => {
+                year_select.appendChild(getOption(year, "20"+year));
+            })
+        });
+
+        function download_selected_report(){
+            let year = document.querySelector("#year-select").value;
+            if(year == "overall"){
+                download_overall_report();
+            }else{
+                fetch(`/generate-annual-csv/${year}`).then(res => {
+                    return res.text();
+                }).then(data => {
+                    const blob = new Blob([data], { type: 'text/csv' });
+
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `report-20${year}.csv`;
+
+                    // Append the link to the DOM and simulate a click to trigger download
+                    document.body.appendChild(link);
+                    link.click();
+
+                    // Clean up by removing the link
+                    document.body.removeChild(link);
+                })
+            }
+        }
+
+        let lastSlice = null;
+        let lastPercent;
+
+        function rand_int(start, end){
+            return Math.floor(Math.random() * (end - start + 1)) + start;
+        }
+
+        function get_legend(text, color){
+            let div = document.createElement("div");
+            div.style.height = "20px";
+            div.style.width = "20px";
+            div.style.background = color;
+
+            let p = document.createElement("p");
+            p.appendChild(div);
+            p.innerHTML += text;
+
+            return p;
+        }
+        
+        function add_slice(percent, color){
+            console.log(percent);
+            let graph = document.querySelector(".graph");
+            let donut_bg = document.querySelector(".donut-bg");
+            
+            let new_donut = document.createElement("div");
+            new_donut.className = "donut";
+            new_donut.style.clipPath = get_clip_path(percent);
+            new_donut.style.borderColor = color;
+            new_donut.style.position = "absolute";
+
+            if(lastSlice){
+                graph.insertBefore(new_donut, lastSlice);
+            }else{
+                graph.appendChild(new_donut);
+            }
+            lastSlice = new_donut;
+        }
+
+        let total_income;
+
+        function download_overall_report(){
+            fetch(`/generate-csv-all`).then(res => {
+                return res.text();
+            }).then(data => {
+                const blob = new Blob([data], { type: 'text/csv' });
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `overall-report.csv`;
+
+                // Append the link to the DOM and simulate a click to trigger download
+                document.body.appendChild(link);
+                link.click();
+
+                // Clean up by removing the link
+                document.body.removeChild(link);
+            })
+        }
+
+        fetch("/get-overall-data").then(response => {
+            return response.json()
+        }).then(data => {
+            title.innerText = "Overall data of {{ current_user.username }}";
+            document.querySelector(".profit h1").innerText = data["profit-ratio"] + "%";
+            document.querySelector(".expenses h1").innerText = "₹ " + data["total-expense"];
+            document.querySelector(".income h1").innerText = "₹ " + data["total-income"];
+
+            total_income = parseInt(data["total-income"]);
+        });
+
+        let list = document.querySelector(".records-list");
+
+        fetch("/get-months-list").then(res => {
+            return res.json();
+        }).then(data => {
+            for(const month in data){
+                const profit = Math.round(parseFloat(data[month]));
+                let a = document.createElement("a");
+                a.href = "/view-month/" + month;
+                a.className = "month-record";
+                let p = document.createElement("p");
+                p.className = "link-left";
+                p.innerText = formatDate(month);
+                a.appendChild(p);
+
+                let link_right_container = document.createElement("div");
+                link_right_container.className = "link-right-container";
+
+                let p2 = document.createElement("p");
+                p2.className = "link-right";
+                p2.innerText = profit + "%";
+
+                let report_btn = document.createElement("button");
+                report_btn.className = "report-btn";
+                report_btn.onclick = (e) => {
+                    if(e.target.tagName == "BUTTON"){
+                        e.preventDefault();
+                        fetch(`/generate-csv/${month}`).then(res => {
+                            return res.text();
+                        }).then(data => {
+                            const blob = new Blob([data], { type: 'text/csv' });
+
+                            const link = document.createElement('a');
+                            link.href = URL.createObjectURL(blob);
+                            link.download = `report-${month}.csv`;
+
+                            // Append the link to the DOM and simulate a click to trigger download
+                            document.body.appendChild(link);
+                            link.click();
+
+                            // Clean up by removing the link
+                            document.body.removeChild(link);
+                        })
+                    }
+                }
+                report_btn.style.backgroundImage = `url("{{ url_for('static', filename='download.png') }}")`;
+
+                link_right_container.appendChild(p2);
+                link_right_container.appendChild(report_btn);
+                
+                a.appendChild(link_right_container);
+                list.appendChild(a);
+            }
+        })
+
+        let world_view = document.querySelector(".world-view");
+        fetch("/get-sorted-expenses-by-loc-all").then(res => {
+            return res.json();
+        }).then(data => {
+            let added_expenses = [];
+            for(const country in data){
+                let country_div = document.createElement("div");
+                country_div.className = "country-main";
+
+                let h1 = document.createElement("h1");
+                console.log(country);
+                h1.innerText = country;
+
+                let title_div = document.createElement("div");
+                title_div.className = "title-main";
+                title_div.onclick = () => {
+                    title_div.classList.toggle("open");
+                }
+                title_div.appendChild(h1);
+
+                let content_div = document.createElement("div");
+                content_div.className = "content-main";
+
+                let expenses = data[country];
+                expenses.forEach(expense => {
+                    if(!added_expenses.includes(expense.name)){
+                        let p = document.createElement("p");
+                        p.innerHTML = `${expense.name}<br>`;
+                        content_div.appendChild(p);
+                        added_expenses.push(expense.name);
+                    }
+                });
+
+                country_div.appendChild(title_div);
+                country_div.appendChild(content_div);
+                world_view.appendChild(country_div);
+            }
+        })
+
+        fetch("/top-cats-overall").then(res => {
+            return res.json()
+        }).then(data => {
+            let static_percent = 0;
+            
+            let list = document.querySelector(".graph-list-container .list");
+
+            for(const cat in data){
+                let amount = data[cat];
+                static_percent += (amount * 100)/total_income;
+                console.log(static_percent);
+
+                let random_color = `rgb(${rand_int(0, 255)}, ${rand_int(0, 255)}, ${rand_int(0, 255)})`;
+                add_slice(static_percent, random_color);
+
+                let percent = (amount * 100)/total_income;
+                
+                percent = (percent.toFixed(2));
+                
+                list.appendChild(get_legend(cat + ` (${percent}%)`, random_color));
+            }
+            list.appendChild(get_legend("Profit", "#444"));
+        })
+
+    </script>
+
+    {% with msg=get_flashed_messages() %}
+    {% if msg[0]  %}
+        <script>alert("{{ msg[0] }}")</script>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>
